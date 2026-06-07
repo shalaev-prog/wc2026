@@ -5,269 +5,83 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ЧМ 2026 — Прогнозы</title>
 <style>
-  /* ── Reset & Base ── */
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
-    --bg: #0d1117;
-    --bg2: #161b22;
-    --bg3: #21262d;
-    --border: #30363d;
-    --text: #e6edf3;
-    --muted: #7d8590;
-    --green: #3fb950;
-    --green-dim: #1a3a22;
-    --gold: #d29922;
-    --gold-dim: #2e2208;
-    --blue: #58a6ff;
-    --blue-dim: #0d2847;
-    --red: #f85149;
-    --red-dim: #3d1210;
-    --radius: 8px;
-    --radius-lg: 12px;
+    --bg: #0d1117; --bg2: #161b22; --bg3: #21262d;
+    --border: #30363d; --text: #e6edf3; --muted: #7d8590;
+    --green: #3fb950; --green-dim: #1a3a22;
+    --gold: #d29922; --gold-dim: #2e2208;
+    --blue: #58a6ff; --blue-dim: #0d2847;
+    --red: #f85149; --red-dim: #3d1210;
+    --radius: 8px; --radius-lg: 12px;
   }
-
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    font-size: 15px;
-    line-height: 1.5;
-  }
-
-  /* ── Header ── */
-  .header {
-    background: var(--bg2);
-    border-bottom: 1px solid var(--border);
-    padding: 0 20px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-  }
-  .header-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 14px 0 10px;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; font-size: 15px; line-height: 1.5; }
+  .header { background: var(--bg2); border-bottom: 1px solid var(--border); padding: 0 20px; position: sticky; top: 0; z-index: 100; }
+  .header-top { display: flex; align-items: center; justify-content: space-between; padding: 14px 0 10px; flex-wrap: wrap; gap: 8px; }
   .logo { font-size: 18px; font-weight: 600; }
   .logo span { color: var(--green); }
-  .flash {
-    font-size: 13px;
-    padding: 4px 12px;
-    border-radius: 20px;
-    background: var(--green-dim);
-    color: var(--green);
-    opacity: 0;
-    transition: opacity .2s;
-    border: 1px solid #2a5c32;
-  }
+  .flash { font-size: 13px; padding: 4px 12px; border-radius: 20px; background: var(--green-dim); color: var(--green); opacity: 0; transition: opacity .2s; border: 1px solid #2a5c32; }
   .flash.show { opacity: 1; }
-  .user-bar {
-    display: flex;
-    gap: 6px;
-    flex-wrap: wrap;
-    padding: 8px 0;
-    align-items: center;
-  }
-  .user-chip {
-    padding: 4px 14px;
-    border-radius: 20px;
-    border: 1px solid var(--border);
-    background: var(--bg3);
-    color: var(--muted);
-    font-size: 13px;
-    cursor: pointer;
-    transition: all .15s;
-  }
-  .user-chip.active {
-    background: var(--blue-dim);
-    border-color: var(--blue);
-    color: var(--blue);
-  }
-  .nav {
-    display: flex;
-    gap: 0;
-  }
-  .nav-btn {
-    padding: 10px 16px;
-    background: transparent;
-    border: none;
-    color: var(--muted);
-    font-size: 13px;
-    cursor: pointer;
-    border-bottom: 2px solid transparent;
-    transition: all .15s;
-    font-family: inherit;
-  }
+  .user-bar { display: flex; gap: 6px; flex-wrap: wrap; padding: 8px 0; align-items: center; }
+  .user-chip { padding: 4px 14px; border-radius: 20px; border: 1px solid var(--border); background: var(--bg3); color: var(--muted); font-size: 13px; cursor: pointer; transition: all .15s; }
+  .user-chip.active { background: var(--blue-dim); border-color: var(--blue); color: var(--blue); }
+  .nav { display: flex; }
+  .nav-btn { padding: 10px 16px; background: transparent; border: none; color: var(--muted); font-size: 13px; cursor: pointer; border-bottom: 2px solid transparent; transition: all .15s; font-family: inherit; }
   .nav-btn.active { color: var(--text); border-bottom-color: var(--green); }
-
-  /* ── Main ── */
-  .main { max-width: 680px; margin: 0 auto; padding: 24px 16px; }
+  .main { max-width: 720px; margin: 0 auto; padding: 24px 16px; }
   .section-title { font-size: 17px; font-weight: 600; margin-bottom: 16px; }
-
-  /* ── Cards ── */
-  .card {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 16px 20px;
-    margin-bottom: 12px;
-  }
-  .card-title {
-    font-size: 11px;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    color: var(--muted);
-    margin-bottom: 14px;
-  }
-
-  /* ── Leaderboard ── */
-  .lb-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 12px 16px;
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    margin-bottom: 8px;
-  }
+  .card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px 20px; margin-bottom: 12px; }
+  .card-title { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; }
+  .lb-row { display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); margin-bottom: 8px; }
   .lb-row.first { background: var(--green-dim); border-color: #2a5c32; }
   .lb-rank { width: 28px; text-align: center; font-size: 17px; }
   .lb-name { flex: 1; font-weight: 500; }
   .lb-stats { display: flex; gap: 10px; font-size: 13px; color: var(--muted); }
   .lb-pts { font-size: 20px; font-weight: 600; color: var(--green); min-width: 52px; text-align: right; }
-
-  /* ── Match cards ── */
-  .match-card {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 14px 16px;
-    margin-bottom: 10px;
-  }
-  .match-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
-  .badge {
-    font-size: 11px;
-    padding: 2px 8px;
-    border-radius: 20px;
-    font-weight: 500;
-  }
+  .group-header { font-size: 12px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); padding: 16px 0 8px; border-bottom: 1px solid var(--border); margin-bottom: 8px; }
+  .match-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 12px 14px; margin-bottom: 8px; }
+  .match-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
+  .badge { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
   .badge-group { background: var(--blue-dim); color: var(--blue); }
   .badge-exact { background: var(--green-dim); color: var(--green); }
   .badge-diff  { background: var(--gold-dim); color: var(--gold); }
   .badge-outcome { background: var(--blue-dim); color: var(--blue); }
   .badge-miss  { background: var(--red-dim); color: var(--red); }
   .date-str { color: var(--muted); font-size: 12px; }
-  .match-row { display: flex; align-items: center; gap: 10px; }
-  .team { flex: 1; font-size: 14px; font-weight: 500; }
+  .match-row { display: flex; align-items: center; gap: 8px; }
+  .team { flex: 1; font-size: 13px; font-weight: 500; }
   .team.right { text-align: right; }
-  .score-inputs { display: flex; align-items: center; gap: 5px; }
-  .score-inp {
-    width: 44px; height: 44px;
-    text-align: center;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    background: var(--bg3);
-    color: var(--text);
-    font-size: 18px;
-    font-weight: 600;
-    transition: border-color .15s;
-    -moz-appearance: textfield;
-  }
+  .score-inputs { display: flex; align-items: center; gap: 4px; }
+  .score-inp { width: 40px; height: 40px; text-align: center; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg3); color: var(--text); font-size: 17px; font-weight: 600; transition: border-color .15s; -moz-appearance: textfield; }
   .score-inp:focus { outline: none; border-color: var(--blue); }
-  .score-inp::-webkit-inner-spin-button,
-  .score-inp::-webkit-outer-spin-button { -webkit-appearance: none; }
-  .colon { color: var(--muted); font-size: 20px; }
-  .actual-res { margin-top: 8px; text-align: center; font-size: 12px; color: var(--muted); }
-
-  /* ── Inputs & Buttons ── */
+  .score-inp::-webkit-inner-spin-button, .score-inp::-webkit-outer-spin-button { -webkit-appearance: none; }
+  .colon { color: var(--muted); font-size: 18px; }
+  .actual-res { margin-top: 6px; text-align: center; font-size: 12px; color: var(--muted); }
   .input-row { display: flex; gap: 8px; align-items: center; }
-  .text-inp {
-    flex: 1;
-    background: var(--bg3);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    color: var(--text);
-    padding: 9px 14px;
-    font-size: 15px;
-    font-family: inherit;
-    transition: border-color .15s;
-  }
+  .text-inp { flex: 1; background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text); padding: 9px 14px; font-size: 15px; font-family: inherit; }
   .text-inp:focus { outline: none; border-color: var(--blue); }
-  .btn {
-    padding: 9px 18px;
-    border-radius: var(--radius);
-    border: none;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    font-family: inherit;
-    transition: opacity .15s;
-  }
+  .btn { padding: 9px 18px; border-radius: var(--radius); border: none; cursor: pointer; font-size: 14px; font-weight: 500; font-family: inherit; transition: opacity .15s; }
   .btn:hover { opacity: .85; }
   .btn-primary { background: var(--green); color: #000; }
   .btn-ghost { background: var(--bg3); border: 1px solid var(--border); color: var(--text); }
-
-  /* ── Scoring ── */
-  .scoring-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 9px 0;
-    border-bottom: 1px solid var(--border);
-    font-size: 14px;
-  }
+  .scoring-row { display: flex; justify-content: space-between; align-items: center; padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
   .scoring-val { font-size: 20px; font-weight: 600; color: var(--green); min-width: 32px; text-align: center; }
-  .mini-btn {
-    width: 30px; height: 30px;
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    background: var(--bg3);
-    color: var(--text);
-    font-size: 17px;
-    cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-  }
+  .mini-btn { width: 30px; height: 30px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg3); color: var(--text); font-size: 17px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
   .mini-btn:hover { border-color: var(--green); }
-
-  /* ── Admin match row ── */
-  .admin-match {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 9px 0;
-    border-bottom: 1px solid var(--border);
-    font-size: 13px;
-    flex-wrap: wrap;
-  }
-
-  /* ── Legend ── */
+  .admin-match { display: flex; align-items: center; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 13px; flex-wrap: wrap; }
   .legend-row { display: flex; justify-content: space-between; padding: 7px 0; font-size: 14px; border-bottom: 1px solid var(--border); }
   .legend-row:last-child { border: none; }
-
-  /* ── Empty ── */
   .empty { text-align: center; padding: 48px 20px; color: var(--muted); font-size: 15px; }
-
-  /* ── Loader ── */
   #loader { text-align: center; padding: 80px 20px; color: var(--muted); }
-  .spinner {
-    width: 36px; height: 36px;
-    border: 3px solid var(--bg3);
-    border-top-color: var(--green);
-    border-radius: 50%;
-    animation: spin .8s linear infinite;
-    margin: 0 auto 16px;
-  }
+  .spinner { width: 36px; height: 36px; border: 3px solid var(--bg3); border-top-color: var(--green); border-radius: 50%; animation: spin .8s linear infinite; margin: 0 auto 16px; }
+  .group-filter { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
+  .filter-btn { padding: 4px 12px; border-radius: 20px; border: 1px solid var(--border); background: var(--bg3); color: var(--muted); font-size: 12px; cursor: pointer; transition: all .15s; font-family: inherit; }
+  .filter-btn.active { background: var(--blue-dim); border-color: var(--blue); color: var(--blue); }
   @keyframes spin { to { transform: rotate(360deg); } }
 </style>
 </head>
 <body>
 
-<!-- ── Header ── -->
 <div class="header">
   <div class="header-top">
     <div class="logo">⚽ <span>ЧМ 2026</span> — Прогнозы</div>
@@ -281,52 +95,48 @@
   </nav>
 </div>
 
-<!-- ── Main ── -->
 <div class="main">
-  <div id="loader">
-    <div class="spinner"></div>
-    Загружаем данные...
-  </div>
+  <div id="loader"><div class="spinner"></div>Загружаем данные...</div>
   <div id="tab-leaderboard" style="display:none"></div>
   <div id="tab-predict"     style="display:none"></div>
   <div id="tab-admin"       style="display:none"></div>
 </div>
 
 <script>
-// ─── CONFIG ─────────────────────────────────────────────────
-// После деплоя Apps Script вставь свой URL сюда:
 const API_URL = 'https://script.google.com/macros/s/AKfycbyak6RsJ1-g0GnwCjFcB89LfJkce_M-zACe5lUNq-G1_mmq4Zl_xNppWGzlOAokTMA/exec';
 const ADMIN_PW = 'admin2026';
 
 const FLAGS = {
-  "Аргентина":"🇦🇷","Канада":"🇨🇦","Марокко":"🇲🇦","Португалия":"🇵🇹",
-  "Испания":"🇪🇸","Бразилия":"🇧🇷","Франция":"🇫🇷","Германия":"🇩🇪",
-  "Англия":"🏴󠁧󠁢󠁥󠁮󠁧󠁿","США":"🇺🇸","Нидерланды":"🇳🇱","Мексика":"🇲🇽",
-  "Италия":"🇮🇹","Хорватия":"🇭🇷","Япония":"🇯🇵","Иран":"🇮🇷",
-  "Бельгия":"🇧🇪","Польша":"🇵🇱","Уругвай":"🇺🇾","Эквадор":"🇪🇨",
+  "Мексика":"🇲🇽","ЮАР":"🇿🇦","Ю.Корея":"🇰🇷","Чехия":"🇨🇿",
+  "Канада":"🇨🇦","Босния":"🇧🇦","Катар":"🇶🇦","Швейцария":"🇨🇭",
+  "США":"🇺🇸","Парагвай":"🇵🇾","Австралия":"🇦🇺","Турция":"🇹🇷",
+  "Бразилия":"🇧🇷","Марокко":"🇲🇦","Гаити":"🇭🇹","Шотландия":"🏴󠁧󠁢󠁳󠁣󠁴󠁿",
+  "Германия":"🇩🇪","Кюрасао":"🇨🇼","Кот-д'Ивуар":"🇨🇮","Эквадор":"🇪🇨",
+  "Нидерланды":"🇳🇱","Япония":"🇯🇵","Швеция":"🇸🇪","Тунис":"🇹🇳",
+  "Бельгия":"🇧🇪","Египет":"🇪🇬","Иран":"🇮🇷","Новая Зеландия":"🇳🇿",
+  "Испания":"🇪🇸","Кабо-Верде":"🇨🇻","Саудовская Аравия":"🇸🇦","Уругвай":"🇺🇾",
+  "Франция":"🇫🇷","Сенегал":"🇸🇳","Ирак":"🇮🇶","Норвегия":"🇳🇴",
+  "Аргентина":"🇦🇷","Алжир":"🇩🇿","Австрия":"🇦🇹","Иордания":"🇯🇴",
+  "Португалия":"🇵🇹","ДР Конго":"🇨🇩","Узбекистан":"🇺🇿","Колумбия":"🇨🇴",
+  "Англия":"🏴󠁧󠁢󠁥󠁮󠁧󠁿","Хорватия":"🇭🇷","Гана":"🇬🇭","Панама":"🇵🇦",
 };
 
 let state = null;
 let activeUser = null;
 let adminUnlocked = false;
 let currentTab = 'leaderboard';
+let activeGroupFilter = 'ALL';
 
-// ─── API ────────────────────────────────────────────────────
 async function apiGet(params) {
   const qs = new URLSearchParams(params).toString();
   const res = await fetch(`${API_URL}?${qs}`);
   return res.json();
 }
-
 async function apiPost(body) {
-  const res = await fetch(API_URL, {
-    method: 'POST',
-    body: JSON.stringify(body),
-  });
+  const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify(body) });
   return res.json();
 }
 
-// ─── INIT ────────────────────────────────────────────────────
 async function init() {
   try {
     state = await apiGet({ action: 'getData' });
@@ -334,12 +144,10 @@ async function init() {
     renderUserBar();
     switchTab('leaderboard');
   } catch(e) {
-    document.getElementById('loader').innerHTML =
-      '<p style="color:#f85149">Ошибка загрузки. Проверь URL в конфиге.</p>';
+    document.getElementById('loader').innerHTML = '<p style="color:#f85149">Ошибка загрузки. Проверь URL в конфиге.</p>';
   }
 }
 
-// ─── FLASH ──────────────────────────────────────────────────
 function flash(msg) {
   const el = document.getElementById('flash');
   el.textContent = msg;
@@ -347,46 +155,43 @@ function flash(msg) {
   setTimeout(() => el.classList.remove('show'), 2500);
 }
 
-// ─── SCORING ────────────────────────────────────────────────
 function calcPts(pred, match) {
-  if (pred.h === null || pred.a === null || match.hs === null || match.as_ === null) return null;
-  const ph=+pred.h, pa=+pred.a, ah=+match.hs, aa=+match.as_;
-  if (ph===ah && pa===aa) return state.scoring.exact;
+  if (pred.h===null||pred.a===null||match.hs===null||match.as_===null) return null;
+  const ph=+pred.h,pa=+pred.a,ah=+match.hs,aa=+match.as_;
+  if (ph===ah&&pa===aa) return state.scoring.exact;
   if ((ph-pa)===(ah-aa)) return state.scoring.diff;
   if (Math.sign(ph-pa)===Math.sign(ah-aa)) return state.scoring.outcome;
   return 0;
 }
 
 function resultBadge(pts) {
-  if (pts === null) return '';
-  if (pts === state.scoring.exact) return `<span class="badge badge-exact" style="margin-left:auto">⚡ Точный счёт +${pts}</span>`;
-  if (pts === state.scoring.diff)  return `<span class="badge badge-diff"  style="margin-left:auto">↔ Разница +${pts}</span>`;
-  if (pts === state.scoring.outcome) return `<span class="badge badge-outcome" style="margin-left:auto">✓ Исход +${pts}</span>`;
+  if (pts===null) return '';
+  if (pts===state.scoring.exact) return `<span class="badge badge-exact" style="margin-left:auto">⚡ Точный +${pts}</span>`;
+  if (pts===state.scoring.diff)  return `<span class="badge badge-diff"  style="margin-left:auto">↔ Разница +${pts}</span>`;
+  if (pts===state.scoring.outcome) return `<span class="badge badge-outcome" style="margin-left:auto">✓ Исход +${pts}</span>`;
   return `<span class="badge badge-miss" style="margin-left:auto">✗ Мимо</span>`;
 }
 
 function getLeaderboard() {
   return state.participants.map(name => {
-    let total=0, exact=0, diff=0, outcome=0;
-    const preds = (state.predictions[name]) || {};
-    state.matches.forEach(m => {
-      const pred = preds[m.id];
-      if (!pred) return;
-      const pts = calcPts(pred, m);
-      if (pts === null) return;
-      total += pts;
-      if (pts === state.scoring.exact) exact++;
-      else if (pts === state.scoring.diff) diff++;
-      else if (pts === state.scoring.outcome) outcome++;
+    let total=0,exact=0,diff=0,outcome=0;
+    const preds=(state.predictions[name])||{};
+    state.matches.forEach(m=>{
+      const pred=preds[m.id];
+      if(!pred) return;
+      const pts=calcPts(pred,m);
+      if(pts===null) return;
+      total+=pts;
+      if(pts===state.scoring.exact) exact++;
+      else if(pts===state.scoring.diff) diff++;
+      else if(pts===state.scoring.outcome) outcome++;
     });
-    return { name, total, exact, diff, outcome };
-  }).sort((a,b) => b.total - a.total);
+    return {name,total,exact,diff,outcome};
+  }).sort((a,b)=>b.total-a.total);
 }
 
-// ─── USER BAR ────────────────────────────────────────────────
 function renderUserBar() {
-  const bar = document.getElementById('user-bar');
-  bar.innerHTML = state.participants.map(name =>
+  document.getElementById('user-bar').innerHTML = state.participants.map(name =>
     `<button class="user-chip ${activeUser===name?'active':''}" onclick="selectUser('${name}')">${name}</button>`
   ).join('');
 }
@@ -397,111 +202,123 @@ function selectUser(name) {
   switchTab('predict');
 }
 
-// ─── TABS ────────────────────────────────────────────────────
 function switchTab(tab) {
   currentTab = tab;
   ['leaderboard','predict','admin'].forEach(t => {
-    document.getElementById('tab-'+t).style.display = t===tab ? '' : 'none';
+    document.getElementById('tab-'+t).style.display = t===tab?'':'none';
   });
-  document.querySelectorAll('.nav-btn').forEach((el,i) => {
-    el.classList.toggle('active', ['leaderboard','predict','admin'][i]===tab);
+  document.querySelectorAll('.nav-btn').forEach((el,i)=>{
+    el.classList.toggle('active',['leaderboard','predict','admin'][i]===tab);
   });
   renderTab(tab);
 }
 
 function renderTab(tab) {
-  if (tab==='leaderboard') renderLeaderboard();
-  else if (tab==='predict') renderPredict();
-  else if (tab==='admin')   renderAdmin();
+  if(tab==='leaderboard') renderLeaderboard();
+  else if(tab==='predict') renderPredict();
+  else if(tab==='admin') renderAdmin();
 }
 
-// ─── LEADERBOARD ─────────────────────────────────────────────
 function renderLeaderboard() {
   const lb = getLeaderboard();
   const medals = ['🥇','🥈','🥉'];
   const el = document.getElementById('tab-leaderboard');
-  el.innerHTML = `<div class="section-title">Таблица лидеров</div>` + (lb.length === 0
-    ? `<div class="empty">Нет участников</div>`
-    : lb.map((p,i) => `
-      <div class="lb-row ${i===0?'first':''}">
-        <div class="lb-rank">${medals[i] || i+1}</div>
-        <div class="lb-name">${p.name}</div>
-        <div class="lb-stats">
-          <span title="Точный счёт">⚡${p.exact}</span>
-          <span title="Разница">↔${p.diff}</span>
-          <span title="Исход">✓${p.outcome}</span>
-        </div>
-        <div class="lb-pts">${p.total} <span style="font-size:12px;font-weight:400;color:var(--muted)">очков</span></div>
-      </div>
-    `).join('')
-  ) + `
+  el.innerHTML = `<div class="section-title">Таблица лидеров</div>` +
+    (lb.length===0 ? `<div class="empty">Нет участников</div>` :
+      lb.map((p,i)=>`
+        <div class="lb-row ${i===0?'first':''}">
+          <div class="lb-rank">${medals[i]||i+1}</div>
+          <div class="lb-name">${p.name}</div>
+          <div class="lb-stats">
+            <span title="Точный счёт">⚡${p.exact}</span>
+            <span title="Разница">↔${p.diff}</span>
+            <span title="Исход">✓${p.outcome}</span>
+          </div>
+          <div class="lb-pts">${p.total} <span style="font-size:12px;font-weight:400;color:var(--muted)">очков</span></div>
+        </div>`).join('')
+    ) + `
     <div class="card" style="margin-top:20px">
       <div class="card-title">Система очков</div>
       <div class="legend-row"><span>⚡ Точный счёт</span><b>${state.scoring.exact} очка</b></div>
       <div class="legend-row"><span>↔ Разница голов</span><b>${state.scoring.diff} очка</b></div>
       <div class="legend-row"><span>✓ Верный исход</span><b>${state.scoring.outcome} очко</b></div>
-    </div>
-  `;
+    </div>`;
 }
 
-// ─── PREDICTIONS ─────────────────────────────────────────────
 function renderPredict() {
   const el = document.getElementById('tab-predict');
   if (!activeUser) {
     el.innerHTML = `<div class="empty">Выберите своё имя выше 👆</div>`;
     return;
   }
-  const preds = state.predictions[activeUser] || {};
-  el.innerHTML = `<div class="section-title">Прогнозы: ${activeUser}</div>` +
-    state.matches.map(m => {
-      const pred = preds[m.id] || { h: '', a: '' };
-      const pts = calcPts(pred, m);
-      return `
-        <div class="match-card">
-          <div class="match-meta">
-            <span class="badge badge-group">Гр. ${m.group}</span>
-            <span class="date-str">${m.date} · ${m.time}</span>
-            ${resultBadge(pts)}
-          </div>
-          <div class="match-row">
-            <div class="team">${FLAGS[m.home]||''} ${m.home}</div>
-            <div class="score-inputs">
-              <input class="score-inp" type="number" min="0" max="20"
-                value="${pred.h ?? ''}" placeholder="—"
-                onchange="savePred('${m.id}', this.value, null)">
-              <span class="colon">:</span>
-              <input class="score-inp" type="number" min="0" max="20"
-                value="${pred.a ?? ''}" placeholder="—"
-                onchange="savePred('${m.id}', null, this.value)">
-            </div>
-            <div class="team right">${m.away} ${FLAGS[m.away]||''}</div>
-          </div>
-          ${m.hs !== null ? `<div class="actual-res">Результат: ${m.hs} : ${m.as_}</div>` : ''}
+  const preds = state.predictions[activeUser]||{};
+  const groups = [...new Set(state.matches.map(m=>m.group))].sort();
+
+  const filterHtml = `
+    <div class="group-filter">
+      <button class="filter-btn ${activeGroupFilter==='ALL'?'active':''}" onclick="setGroupFilter('ALL')">Все</button>
+      ${groups.map(g=>`<button class="filter-btn ${activeGroupFilter===g?'active':''}" onclick="setGroupFilter('${g}')">Группа ${g}</button>`).join('')}
+    </div>`;
+
+  const filtered = activeGroupFilter==='ALL' ? state.matches : state.matches.filter(m=>m.group===activeGroupFilter);
+
+  // group by group label
+  let matchesHtml = '';
+  let lastGroup = null;
+  filtered.forEach(m => {
+    if (m.group !== lastGroup) {
+      matchesHtml += `<div class="group-header">Группа ${m.group}</div>`;
+      lastGroup = m.group;
+    }
+    const pred = preds[m.id]||{h:'',a:''};
+    const pts = calcPts(pred,m);
+    matchesHtml += `
+      <div class="match-card">
+        <div class="match-meta">
+          <span class="date-str">${m.date} · ${m.time}</span>
+          ${resultBadge(pts)}
         </div>
-      `;
-    }).join('');
+        <div class="match-row">
+          <div class="team">${FLAGS[m.home]||''} ${m.home}</div>
+          <div class="score-inputs">
+            <input class="score-inp" type="number" min="0" max="20" value="${pred.h??''}" placeholder="—"
+              onchange="savePred('${m.id}',this.value,null)">
+            <span class="colon">:</span>
+            <input class="score-inp" type="number" min="0" max="20" value="${pred.a??''}" placeholder="—"
+              onchange="savePred('${m.id}',null,this.value)">
+          </div>
+          <div class="team right">${m.away} ${FLAGS[m.away]||''}</div>
+        </div>
+        ${m.hs!==null?`<div class="actual-res">Результат: ${m.hs} : ${m.as_}</div>`:''}
+      </div>`;
+  });
+
+  const total = Object.keys(preds).length;
+  el.innerHTML = `
+    <div class="section-title">Прогнозы: ${activeUser} <span style="font-size:13px;font-weight:400;color:var(--muted)">(${total}/72)</span></div>
+    ${filterHtml}
+    ${matchesHtml}`;
+}
+
+function setGroupFilter(g) {
+  activeGroupFilter = g;
+  renderPredict();
 }
 
 async function savePred(matchId, newH, newA) {
   if (!activeUser) return;
-  const preds = state.predictions[activeUser] || {};
-  const cur = preds[matchId] || { h: null, a: null };
-  const h = newH !== null ? (newH === '' ? null : +newH) : cur.h;
-  const a = newA !== null ? (newA === '' ? null : +newA) : cur.a;
-
-  if (!state.predictions[activeUser]) state.predictions[activeUser] = {};
-  state.predictions[activeUser][matchId] = { h, a };
-
+  const preds = state.predictions[activeUser]||{};
+  const cur = preds[matchId]||{h:null,a:null};
+  const h = newH!==null?(newH===''?null:+newH):cur.h;
+  const a = newA!==null?(newA===''?null:+newA):cur.a;
+  if (!state.predictions[activeUser]) state.predictions[activeUser]={};
+  state.predictions[activeUser][matchId]={h,a};
   try {
-    await apiPost({ action: 'savePrediction', user: activeUser, matchId, h, a });
+    await apiPost({action:'savePrediction',user:activeUser,matchId,h,a});
     flash('Сохранено ✓');
-    renderPredict();
-  } catch(e) {
-    flash('Ошибка сохранения ✗');
-  }
+  } catch(e) { flash('Ошибка ✗'); }
 }
 
-// ─── ADMIN ───────────────────────────────────────────────────
 function renderAdmin() {
   const el = document.getElementById('tab-admin');
   if (!adminUnlocked) {
@@ -510,21 +327,40 @@ function renderAdmin() {
       <div class="card">
         <p style="color:var(--muted);font-size:14px;margin-bottom:12px">Введите пароль для ввода результатов</p>
         <div class="input-row">
-          <input class="text-inp" type="password" id="admin-pw" placeholder="Пароль..."
-            onkeydown="if(event.key==='Enter')checkAdmin()">
+          <input class="text-inp" type="password" id="admin-pw" placeholder="Пароль..." onkeydown="if(event.key==='Enter')checkAdmin()">
           <button class="btn btn-primary" onclick="checkAdmin()">Войти</button>
         </div>
-      </div>
-    `;
+      </div>`;
     return;
   }
 
+  const groups = [...new Set(state.matches.map(m=>m.group))].sort();
+  let matchesHtml = '';
+  let lastGroup = null;
+  state.matches.forEach(m=>{
+    if(m.group!==lastGroup){
+      matchesHtml+=`<div style="font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:12px 0 6px;border-bottom:1px solid var(--border);margin-bottom:4px">Группа ${m.group}</div>`;
+      lastGroup=m.group;
+    }
+    matchesHtml+=`
+      <div class="admin-match">
+        <span style="flex:1;color:var(--text);font-size:13px">${FLAGS[m.home]||''} ${m.home} — ${m.away} ${FLAGS[m.away]||''}</span>
+        <span style="font-size:11px;color:var(--muted);white-space:nowrap">${m.date} ${m.time}</span>
+        <div style="display:flex;align-items:center;gap:4px">
+          <input class="score-inp" style="width:38px;height:36px;font-size:15px" type="number" min="0"
+            value="${m.hs??''}" placeholder="—" onchange="saveResult('${m.id}',this.value,null)">
+          <span class="colon" style="font-size:14px">:</span>
+          <input class="score-inp" style="width:38px;height:36px;font-size:15px" type="number" min="0"
+            value="${m.as_??''}" placeholder="—" onchange="saveResult('${m.id}',null,this.value)">
+        </div>
+      </div>`;
+  });
+
   el.innerHTML = `
     <div class="section-title">Панель администратора</div>
-
     <div class="card">
       <div class="card-title">Очки за прогноз</div>
-      ${[['exact','⚡ Точный счёт'],['diff','↔ Разница голов'],['outcome','✓ Верный исход']].map(([k,label]) => `
+      ${[['exact','⚡ Точный счёт'],['diff','↔ Разница голов'],['outcome','✓ Верный исход']].map(([k,label])=>`
         <div class="scoring-row">
           <span>${label}</span>
           <div style="display:flex;align-items:center;gap:8px">
@@ -532,69 +368,47 @@ function renderAdmin() {
             <span class="scoring-val">${state.scoring[k]}</span>
             <button class="mini-btn" onclick="changeScoring('${k}',1)">+</button>
           </div>
-        </div>
-      `).join('')}
+        </div>`).join('')}
     </div>
-
     <div class="card">
-      <div class="card-title">Результаты матчей</div>
-      ${state.matches.map(m => `
-        <div class="admin-match">
-          <span class="badge badge-group">Гр. ${m.group}</span>
-          <span style="flex:1;color:var(--muted)">${FLAGS[m.home]||''} ${m.home} — ${m.away} ${FLAGS[m.away]||''}</span>
-          <span style="font-size:12px;color:var(--muted)">${m.date}</span>
-          <div style="display:flex;align-items:center;gap:4px">
-            <input class="score-inp" style="width:40px;height:38px;font-size:15px" type="number" min="0"
-              value="${m.hs ?? ''}" placeholder="—"
-              onchange="saveResult('${m.id}', this.value, null)">
-            <span class="colon" style="font-size:14px">:</span>
-            <input class="score-inp" style="width:40px;height:38px;font-size:15px" type="number" min="0"
-              value="${m.as_ ?? ''}" placeholder="—"
-              onchange="saveResult('${m.id}', null, this.value)">
-          </div>
-        </div>
-      `).join('')}
+      <div class="card-title">Результаты матчей (72 игры)</div>
+      ${matchesHtml}
     </div>
-
-    <button class="btn btn-ghost" onclick="refreshData()" style="margin-top:8px">↻ Обновить данные</button>
-  `;
+    <button class="btn btn-ghost" onclick="refreshData()" style="margin-top:8px">↻ Обновить данные</button>`;
 }
 
 function checkAdmin() {
   const pw = document.getElementById('admin-pw').value;
-  if (pw === ADMIN_PW) { adminUnlocked = true; renderAdmin(); }
+  if(pw===ADMIN_PW){adminUnlocked=true;renderAdmin();}
   else flash('Неверный пароль ✗');
 }
 
 async function changeScoring(key, delta) {
-  state.scoring[key] = Math.max(0, state.scoring[key] + delta);
-  await apiPost({ action: 'saveScoring', password: ADMIN_PW, scoring: state.scoring });
+  state.scoring[key]=Math.max(0,state.scoring[key]+delta);
+  await apiPost({action:'saveScoring',password:ADMIN_PW,scoring:state.scoring});
   flash('Сохранено ✓');
   renderAdmin();
 }
 
 async function saveResult(matchId, newH, newA) {
-  const m = state.matches.find(m => m.id === matchId);
-  if (!m) return;
-  if (newH !== null) m.hs  = newH  === '' ? null : +newH;
-  if (newA !== null) m.as_ = newA  === '' ? null : +newA;
+  const m=state.matches.find(m=>m.id===matchId);
+  if(!m) return;
+  if(newH!==null) m.hs=newH===''?null:+newH;
+  if(newA!==null) m.as_=newA===''?null:+newA;
   try {
-    await apiPost({ action: 'saveResult', password: ADMIN_PW, matchId, hs: m.hs, as_: m.as_ });
+    await apiPost({action:'saveResult',password:ADMIN_PW,matchId,hs:m.hs,as_:m.as_});
     flash('Результат сохранён ✓');
-  } catch(e) {
-    flash('Ошибка ✗');
-  }
+  } catch(e){flash('Ошибка ✗');}
 }
 
 async function refreshData() {
   flash('Обновляем...');
-  state = await apiGet({ action: 'getData' });
+  state=await apiGet({action:'getData'});
   renderUserBar();
   renderTab(currentTab);
   flash('Готово ✓');
 }
 
-// ─── START ───────────────────────────────────────────────────
 init();
 </script>
 </body>
