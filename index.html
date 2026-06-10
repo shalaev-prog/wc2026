@@ -105,6 +105,7 @@
 <script>
 const API_URL = 'https://script.google.com/macros/s/AKfycbyak6RsJ1-g0GnwCjFcB89LfJkce_M-zACe5lUNq-G1_mmq4Zl_xNppWGzlOAokTMA/exec';
 const ADMIN_PW = 'admin2026';
+const LOCK_KEY = 'wc2026:locked';
 
 const FLAGS = {
   "Мексика":"🇲🇽","ЮАР":"🇿🇦","Ю.Корея":"🇰🇷","Чехия":"🇨🇿",
@@ -126,6 +127,7 @@ let activeUser = null;
 let adminUnlocked = false;
 let currentTab = 'leaderboard';
 let activeGroupFilter = 'ALL';
+let isLocked = false;
 
 async function apiGet(params) {
   const qs = new URLSearchParams(params).toString();
@@ -139,6 +141,12 @@ async function apiPost(body) {
 
 async function init() {
   try {
+    // load lock state from shared storage
+    try {
+      const lockRes = await window.storage.get(LOCK_KEY, true);
+      isLocked = lockRes ? JSON.parse(lockRes.value) : false;
+    } catch(e) { isLocked = false; }
+
     state = await apiGet({ action: 'getData' });
     document.getElementById('loader').style.display = 'none';
     renderUserBar();
@@ -293,11 +301,26 @@ function renderPredict() {
       </div>`;
   });
 
+  const lockedBanner = isLocked ? `
+    <div style="background:var(--gold-dim);border:1px solid var(--gold);border-radius:var(--radius-lg);padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:10px;font-size:14px;color:var(--gold)">
+      🔒 <span><b>Приём прогнозов закрыт.</b> Групповой этап начался — изменения заблокированы.</span>
+    </div>` : '';
+
   const total = Object.keys(preds).length;
   el.innerHTML = `
     <div class="section-title">Прогнозы: ${activeUser} <span style="font-size:13px;font-weight:400;color:var(--muted)">(${total}/72)</span></div>
+    ${lockedBanner}
     ${filterHtml}
     ${matchesHtml}`;
+
+  // disable all inputs if locked
+  if (isLocked) {
+    el.querySelectorAll('.score-inp').forEach(inp => {
+      inp.disabled = true;
+      inp.style.opacity = '0.4';
+      inp.style.cursor = 'not-allowed';
+    });
+  }
 }
 
 function setGroupFilter(g) {
@@ -307,6 +330,7 @@ function setGroupFilter(g) {
 
 async function savePred(matchId, newH, newA) {
   if (!activeUser) return;
+  if (isLocked) { flash('🔒 Приём прогнозов закрыт'); return; }
   const preds = state.predictions[activeUser]||{};
   const cur = preds[matchId]||{h:null,a:null};
   const h = newH!==null?(newH===''?null:+newH):cur.h;
@@ -356,8 +380,17 @@ function renderAdmin() {
       </div>`;
   });
 
+  const lockBtn = isLocked
+    ? `<button class="btn btn-primary" onclick="toggleLock(false)" style="background:var(--green);margin-bottom:12px;width:100%">🔓 Разблокировать приём прогнозов</button>`
+    : `<button class="btn" onclick="toggleLock(true)" style="background:var(--gold-dim);border:1px solid var(--gold);color:var(--gold);margin-bottom:12px;width:100%">🔒 Заблокировать приём прогнозов</button>`;
+
   el.innerHTML = `
     <div class="section-title">Панель администратора</div>
+    <div class="card">
+      <div class="card-title">Управление приёмом прогнозов</div>
+      ${lockBtn}
+      <p style="font-size:12px;color:var(--muted)">Статус: ${isLocked ? '<span style="color:var(--gold)">🔒 Заблокировано</span>' : '<span style="color:var(--green)">🔓 Открыто</span>'}</p>
+    </div>
     <div class="card">
       <div class="card-title">Очки за прогноз</div>
       ${[['exact','⚡ Точный счёт'],['diff','↔ Разница голов'],['outcome','✓ Верный исход']].map(([k,label])=>`
@@ -399,6 +432,16 @@ async function saveResult(matchId, newH, newA) {
     await apiPost({action:'saveResult',password:ADMIN_PW,matchId,hs:m.hs,as_:m.as_});
     flash('Результат сохранён ✓');
   } catch(e){flash('Ошибка ✗');}
+}
+
+async function toggleLock(lock) {
+  try {
+    await window.storage.set(LOCK_KEY, JSON.stringify(lock), true);
+    isLocked = lock;
+    flash(lock ? '🔒 Прогнозы заблокированы' : '🔓 Прогнозы разблокированы');
+    renderAdmin();
+    if (currentTab === 'predict') renderPredict();
+  } catch(e) { flash('Ошибка ✗'); }
 }
 
 async function refreshData() {
