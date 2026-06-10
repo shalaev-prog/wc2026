@@ -105,7 +105,7 @@
 <script>
 const API_URL = 'https://script.google.com/macros/s/AKfycbyak6RsJ1-g0GnwCjFcB89LfJkce_M-zACe5lUNq-G1_mmq4Zl_xNppWGzlOAokTMA/exec';
 const ADMIN_PW = 'admin2026';
-const LOCK_KEY = 'wc2026:locked';
+
 
 const FLAGS = {
   "Мексика":"🇲🇽","ЮАР":"🇿🇦","Ю.Корея":"🇰🇷","Чехия":"🇨🇿",
@@ -141,13 +141,8 @@ async function apiPost(body) {
 
 async function init() {
   try {
-    // load lock state from shared storage
-    try {
-      const lockRes = await window.storage.get(LOCK_KEY, true);
-      isLocked = lockRes ? JSON.parse(lockRes.value) : false;
-    } catch(e) { isLocked = false; }
-
     state = await apiGet({ action: 'getData' });
+    isLocked = state.locked === true;
     document.getElementById('loader').style.display = 'none';
     renderUserBar();
     switchTab('leaderboard');
@@ -436,7 +431,7 @@ async function saveResult(matchId, newH, newA) {
 
 async function toggleLock(lock) {
   try {
-    await window.storage.set(LOCK_KEY, JSON.stringify(lock), true);
+    await apiPost({ action: 'saveLock', password: ADMIN_PW, locked: lock });
     isLocked = lock;
     flash(lock ? '🔒 Прогнозы заблокированы' : '🔓 Прогнозы разблокированы');
     renderAdmin();
