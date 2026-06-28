@@ -384,7 +384,6 @@ function renderPredict() {
       <div class="match-card">
         <div class="match-meta">
           <span class="badge ${isPlayoff?'badge-playoff':'badge-group'}">${isPlayoff ? (PHASE_LABELS[phase]||phase) : ('Гр. ' + m.group)}</span>
-          <span class="date-str">${m.date} · ${m.time}</span>
           ${resultBadge(pts)}
         </div>
         <div class="match-row">
@@ -478,7 +477,6 @@ function renderAdmin() {
     matchesHtml += `
       <div class="admin-match">
         <span style="flex:1;font-size:13px">${FLAGS[m.home]||''} ${m.home} — ${m.away} ${FLAGS[m.away]||''}</span>
-        <span style="font-size:11px;color:var(--muted);white-space:nowrap">${m.date} ${m.time}</span>
         <div style="display:flex;align-items:center;gap:4px">
           <input class="score-inp" style="width:38px;height:36px;font-size:15px" type="number" min="0"
             value="${m.hs??''}" placeholder="—" onchange="saveResult('${m.id}',this.value,null)">
