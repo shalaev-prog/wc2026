@@ -13,6 +13,7 @@
     --gold: #d29922; --gold-dim: #2e2208;
     --blue: #58a6ff; --blue-dim: #0d2847;
     --red: #f85149; --red-dim: #3d1210;
+    --purple: #bc8cff; --purple-dim: #1e1135;
     --radius: 8px; --radius-lg: 12px;
   }
   body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; font-size: 15px; line-height: 1.5; }
@@ -20,7 +21,7 @@
   .header-top { display: flex; align-items: center; justify-content: space-between; padding: 14px 0 10px; flex-wrap: wrap; gap: 8px; }
   .logo { font-size: 18px; font-weight: 600; }
   .logo span { color: var(--green); }
-  .flash { font-size: 13px; padding: 4px 12px; border-radius: 20px; background: var(--green-dim); color: var(--green); opacity: 0; transition: opacity .2s; border: 1px solid #2a5c32; }
+  .flash { font-size: 13px; padding: 4px 12px; border-radius: 20px; background: var(--green-dim); color: var(--green); opacity: 0; transition: opacity .2s; border: 1px solid #2a5c32; pointer-events: none; }
   .flash.show { opacity: 1; }
   .user-bar { display: flex; gap: 6px; flex-wrap: wrap; padding: 8px 0; align-items: center; }
   .user-chip { padding: 4px 14px; border-radius: 20px; border: 1px solid var(--border); background: var(--bg3); color: var(--muted); font-size: 13px; cursor: pointer; transition: all .15s; }
@@ -32,17 +33,32 @@
   .section-title { font-size: 17px; font-weight: 600; margin-bottom: 16px; }
   .card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 16px 20px; margin-bottom: 12px; }
   .card-title { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-bottom: 14px; }
+  /* Leaderboard */
   .lb-row { display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); margin-bottom: 8px; }
   .lb-row.first { background: var(--green-dim); border-color: #2a5c32; }
   .lb-rank { width: 28px; text-align: center; font-size: 17px; }
   .lb-name { flex: 1; font-weight: 500; }
-  .lb-stats { display: flex; gap: 10px; font-size: 13px; color: var(--muted); }
+  .lb-stats { display: flex; gap: 8px; font-size: 12px; color: var(--muted); flex-wrap: wrap; }
   .lb-pts { font-size: 20px; font-weight: 600; color: var(--green); min-width: 52px; text-align: right; }
-  .group-header { font-size: 12px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); padding: 16px 0 8px; border-bottom: 1px solid var(--border); margin-bottom: 8px; }
+  /* Champion block */
+  .champion-card { background: var(--purple-dim); border: 1px solid var(--purple); border-radius: var(--radius-lg); padding: 16px 20px; margin-bottom: 20px; }
+  .champion-card.correct { background: var(--green-dim); border-color: var(--green); }
+  .champion-title { font-size: 13px; font-weight: 600; color: var(--purple); margin-bottom: 10px; letter-spacing: .05em; }
+  .champion-card.correct .champion-title { color: var(--green); }
+  .champion-select { width: 100%; background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text); padding: 9px 14px; font-size: 15px; font-family: inherit; cursor: pointer; }
+  .champion-select:focus { outline: none; border-color: var(--purple); }
+  .champion-select:disabled { opacity: 0.5; cursor: not-allowed; }
+  /* Filters */
+  .phase-filter { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
+  .filter-btn { padding: 4px 12px; border-radius: 20px; border: 1px solid var(--border); background: var(--bg3); color: var(--muted); font-size: 12px; cursor: pointer; transition: all .15s; font-family: inherit; }
+  .filter-btn.active { background: var(--blue-dim); border-color: var(--blue); color: var(--blue); }
+  /* Match cards */
+  .phase-header { font-size: 12px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); padding: 16px 0 8px; border-bottom: 1px solid var(--border); margin-bottom: 8px; }
   .match-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 12px 14px; margin-bottom: 8px; }
   .match-meta { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
   .badge { font-size: 11px; padding: 2px 8px; border-radius: 20px; font-weight: 500; }
   .badge-group { background: var(--blue-dim); color: var(--blue); }
+  .badge-playoff { background: var(--purple-dim); color: var(--purple); }
   .badge-exact { background: var(--green-dim); color: var(--green); }
   .badge-diff  { background: var(--gold-dim); color: var(--gold); }
   .badge-outcome { background: var(--blue-dim); color: var(--blue); }
@@ -55,8 +71,10 @@
   .score-inp { width: 40px; height: 40px; text-align: center; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg3); color: var(--text); font-size: 17px; font-weight: 600; transition: border-color .15s; -moz-appearance: textfield; }
   .score-inp:focus { outline: none; border-color: var(--blue); }
   .score-inp::-webkit-inner-spin-button, .score-inp::-webkit-outer-spin-button { -webkit-appearance: none; }
+  .score-inp:disabled { opacity: 0.4; cursor: not-allowed; }
   .colon { color: var(--muted); font-size: 18px; }
   .actual-res { margin-top: 6px; text-align: center; font-size: 12px; color: var(--muted); }
+  /* Forms */
   .input-row { display: flex; gap: 8px; align-items: center; }
   .text-inp { flex: 1; background: var(--bg3); border: 1px solid var(--border); border-radius: var(--radius); color: var(--text); padding: 9px 14px; font-size: 15px; font-family: inherit; }
   .text-inp:focus { outline: none; border-color: var(--blue); }
@@ -64,19 +82,27 @@
   .btn:hover { opacity: .85; }
   .btn-primary { background: var(--green); color: #000; }
   .btn-ghost { background: var(--bg3); border: 1px solid var(--border); color: var(--text); }
+  .btn-gold { background: var(--gold-dim); border: 1px solid var(--gold); color: var(--gold); }
+  .btn-red { background: var(--red-dim); border: 1px solid var(--red); color: var(--red); }
+  /* Scoring */
   .scoring-row { display: flex; justify-content: space-between; align-items: center; padding: 9px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
+  .scoring-row:last-child { border: none; }
   .scoring-val { font-size: 20px; font-weight: 600; color: var(--green); min-width: 32px; text-align: center; }
   .mini-btn { width: 30px; height: 30px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg3); color: var(--text); font-size: 17px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
   .mini-btn:hover { border-color: var(--green); }
+  /* Admin match */
   .admin-match { display: flex; align-items: center; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 13px; flex-wrap: wrap; }
+  /* Legend */
   .legend-row { display: flex; justify-content: space-between; padding: 7px 0; font-size: 14px; border-bottom: 1px solid var(--border); }
   .legend-row:last-child { border: none; }
+  /* Banner */
+  .banner { border-radius: var(--radius-lg); padding: 12px 16px; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; font-size: 14px; }
+  .banner-gold { background: var(--gold-dim); border: 1px solid var(--gold); color: var(--gold); }
+  /* Misc */
   .empty { text-align: center; padding: 48px 20px; color: var(--muted); font-size: 15px; }
   #loader { text-align: center; padding: 80px 20px; color: var(--muted); }
   .spinner { width: 36px; height: 36px; border: 3px solid var(--bg3); border-top-color: var(--green); border-radius: 50%; animation: spin .8s linear infinite; margin: 0 auto 16px; }
-  .group-filter { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
-  .filter-btn { padding: 4px 12px; border-radius: 20px; border: 1px solid var(--border); background: var(--bg3); color: var(--muted); font-size: 12px; cursor: pointer; transition: all .15s; font-family: inherit; }
-  .filter-btn.active { background: var(--blue-dim); border-color: var(--blue); color: var(--blue); }
+  select option { background: var(--bg3); }
   @keyframes spin { to { transform: rotate(360deg); } }
 </style>
 </head>
@@ -106,62 +132,77 @@
 const API_URL = 'https://script.google.com/macros/s/AKfycbyak6RsJ1-g0GnwCjFcB89LfJkce_M-zACe5lUNq-G1_mmq4Zl_xNppWGzlOAokTMA/exec';
 const ADMIN_PW = 'admin2026';
 
+const PHASE_LABELS = { group:'Групповой этап', R32:'1/16 финала', R16:'1/8 финала', QF:'Четвертьфинал', SF:'Полуфинал', F:'Финал' };
+const PHASE_ORDER  = ['group','R32','R16','QF','SF','F'];
+
+const ALL_TEAMS = [
+  'Аргентина','Алжир','Австралия','Австрия','Англия','Бельгия','Босния',
+  'Бразилия','Гана','Германия','ДР Конго','Египет','Испания','Кабо-Верде',
+  'Канада','Колумбия','Кот-д\'Ивуар','Марокко','Мексика','Нидерланды',
+  'Норвегия','Парагвай','Португалия','Сенегал','США','Франция','Хорватия',
+  'Швейцария','Швеция','Эквадор','ЮАР','Япония',
+];
 
 const FLAGS = {
-  "Мексика":"🇲🇽","ЮАР":"🇿🇦","Ю.Корея":"🇰🇷","Чехия":"🇨🇿",
-  "Канада":"🇨🇦","Босния":"🇧🇦","Катар":"🇶🇦","Швейцария":"🇨🇭",
-  "США":"🇺🇸","Парагвай":"🇵🇾","Австралия":"🇦🇺","Турция":"🇹🇷",
-  "Бразилия":"🇧🇷","Марокко":"🇲🇦","Гаити":"🇭🇹","Шотландия":"🏴󠁧󠁢󠁳󠁣󠁴󠁿",
-  "Германия":"🇩🇪","Кюрасао":"🇨🇼","Кот-д'Ивуар":"🇨🇮","Эквадор":"🇪🇨",
-  "Нидерланды":"🇳🇱","Япония":"🇯🇵","Швеция":"🇸🇪","Тунис":"🇹🇳",
-  "Бельгия":"🇧🇪","Египет":"🇪🇬","Иран":"🇮🇷","Новая Зеландия":"🇳🇿",
-  "Испания":"🇪🇸","Кабо-Верде":"🇨🇻","Саудовская Аравия":"🇸🇦","Уругвай":"🇺🇾",
-  "Франция":"🇫🇷","Сенегал":"🇸🇳","Ирак":"🇮🇶","Норвегия":"🇳🇴",
-  "Аргентина":"🇦🇷","Алжир":"🇩🇿","Австрия":"🇦🇹","Иордания":"🇯🇴",
-  "Португалия":"🇵🇹","ДР Конго":"🇨🇩","Узбекистан":"🇺🇿","Колумбия":"🇨🇴",
-  "Англия":"🏴󠁧󠁢󠁥󠁮󠁧󠁿","Хорватия":"🇭🇷","Гана":"🇬🇭","Панама":"🇵🇦",
+  'Мексика':'🇲🇽','ЮАР':'🇿🇦','Ю.Корея':'🇰🇷','Чехия':'🇨🇿',
+  'Канада':'🇨🇦','Босния':'🇧🇦','Катар':'🇶🇦','Швейцария':'🇨🇭',
+  'США':'🇺🇸','Парагвай':'🇵🇾','Австралия':'🇦🇺','Турция':'🇹🇷',
+  'Бразилия':'🇧🇷','Марокко':'🇲🇦','Гаити':'🇭🇹','Шотландия':'🏴󠁧󠁢󠁳󠁣󠁴󠁿',
+  'Германия':'🇩🇪','Кюрасао':'🇨🇼','Кот-д\'Ивуар':'🇨🇮','Эквадор':'🇪🇨',
+  'Нидерланды':'🇳🇱','Япония':'🇯🇵','Швеция':'🇸🇪','Тунис':'🇹🇳',
+  'Бельгия':'🇧🇪','Египет':'🇪🇬','Иран':'🇮🇷','Новая Зеландия':'🇳🇿',
+  'Испания':'🇪🇸','Кабо-Верде':'🇨🇻','Саудовская Аравия':'🇸🇦','Уругвай':'🇺🇾',
+  'Франция':'🇫🇷','Сенегал':'🇸🇳','Ирак':'🇮🇶','Норвегия':'🇳🇴',
+  'Аргентина':'🇦🇷','Алжир':'🇩🇿','Австрия':'🇦🇹','Иордания':'🇯🇴',
+  'Португалия':'🇵🇹','ДР Конго':'🇨🇩','Узбекистан':'🇺🇿','Колумбия':'🇨🇴',
+  'Англия':'🏴󠁧󠁢󠁥󠁮󠁧󠁿','Хорватия':'🇭🇷','Гана':'🇬🇭','Панама':'🇵🇦',
+  'Чехия':'🇨🇿','Польша':'🇵🇱',
 };
 
 let state = null;
 let activeUser = null;
 let adminUnlocked = false;
 let currentTab = 'leaderboard';
-let activeGroupFilter = 'ALL';
-let isLocked = false;
+let activePhaseFilter = 'ALL';
 
+// ── API ──────────────────────────────────────────────────────
 async function apiGet(params) {
   const qs = new URLSearchParams(params).toString();
   const res = await fetch(`${API_URL}?${qs}`);
   return res.json();
 }
 async function apiPost(body) {
-  const res = await fetch(API_URL, { method: 'POST', body: JSON.stringify(body) });
+  const res = await fetch(API_URL, { method:'POST', body:JSON.stringify(body) });
   return res.json();
 }
 
+// ── INIT ─────────────────────────────────────────────────────
 async function init() {
   try {
-    state = await apiGet({ action: 'getData' });
-    isLocked = state.locked === true;
+    state = await apiGet({ action:'getData' });
     document.getElementById('loader').style.display = 'none';
     renderUserBar();
     switchTab('leaderboard');
   } catch(e) {
-    document.getElementById('loader').innerHTML = '<p style="color:#f85149">Ошибка загрузки. Проверь URL в конфиге.</p>';
+    document.getElementById('loader').innerHTML = '<p style="color:var(--red)">Ошибка загрузки. Проверь URL в конфиге.</p>';
   }
 }
 
-function flash(msg) {
+function flash(msg, color) {
   const el = document.getElementById('flash');
   el.textContent = msg;
+  el.style.background = color === 'red' ? 'var(--red-dim)' : 'var(--green-dim)';
+  el.style.color = color === 'red' ? 'var(--red)' : 'var(--green)';
+  el.style.borderColor = color === 'red' ? '#5c2a2a' : '#2a5c32';
   el.classList.add('show');
   setTimeout(() => el.classList.remove('show'), 2500);
 }
 
+// ── SCORING ──────────────────────────────────────────────────
 function calcPts(pred, match) {
   if (pred.h===null||pred.a===null||match.hs===null||match.as_===null) return null;
-  const ph=+pred.h,pa=+pred.a,ah=+match.hs,aa=+match.as_;
-  if (ph===ah&&pa===aa) return state.scoring.exact;
+  const ph=+pred.h, pa=+pred.a, ah=+match.hs, aa=+match.as_;
+  if (ph===ah && pa===aa) return state.scoring.exact;
   if ((ph-pa)===(ah-aa)) return state.scoring.diff;
   if (Math.sign(ph-pa)===Math.sign(ah-aa)) return state.scoring.outcome;
   return 0;
@@ -169,69 +210,90 @@ function calcPts(pred, match) {
 
 function resultBadge(pts) {
   if (pts===null) return '';
-  if (pts===state.scoring.exact) return `<span class="badge badge-exact" style="margin-left:auto">⚡ Точный +${pts}</span>`;
-  if (pts===state.scoring.diff)  return `<span class="badge badge-diff"  style="margin-left:auto">↔ Разница +${pts}</span>`;
+  if (pts===state.scoring.exact)   return `<span class="badge badge-exact" style="margin-left:auto">⚡ Точный +${pts}</span>`;
+  if (pts===state.scoring.diff)    return `<span class="badge badge-diff"  style="margin-left:auto">↔ Разница +${pts}</span>`;
   if (pts===state.scoring.outcome) return `<span class="badge badge-outcome" style="margin-left:auto">✓ Исход +${pts}</span>`;
   return `<span class="badge badge-miss" style="margin-left:auto">✗ Мимо</span>`;
 }
 
+// ── LEADERBOARD ───────────────────────────────────────────────
 function getLeaderboard() {
   return state.participants.map(name => {
-    let total=0,exact=0,diff=0,outcome=0;
-    const preds=(state.predictions[name])||{};
-    state.matches.forEach(m=>{
-      const pred=preds[m.id];
-      if(!pred) return;
-      const pts=calcPts(pred,m);
-      if(pts===null) return;
-      total+=pts;
-      if(pts===state.scoring.exact) exact++;
-      else if(pts===state.scoring.diff) diff++;
-      else if(pts===state.scoring.outcome) outcome++;
+    let total=0, exact=0, diff=0, outcome=0, champPts=0;
+    const preds = state.predictions[name] || {};
+    state.matches.forEach(m => {
+      const pred = preds[m.id];
+      if (!pred) return;
+      const pts = calcPts(pred, m);
+      if (pts === null) return;
+      total += pts;
+      if (pts===state.scoring.exact) exact++;
+      else if (pts===state.scoring.diff) diff++;
+      else if (pts===state.scoring.outcome) outcome++;
     });
-    return {name,total,exact,diff,outcome};
-  }).sort((a,b)=>b.total-a.total);
+    // champion bonus
+    const pick = state.championPicks[name];
+    if (pick && state.champion && pick === state.champion) {
+      champPts = state.scoring.champion;
+      total += champPts;
+    }
+    return { name, total, exact, diff, outcome, champPts, pick };
+  }).sort((a,b) => b.total - a.total);
 }
 
+// ── USER BAR ─────────────────────────────────────────────────
 function renderUserBar() {
   document.getElementById('user-bar').innerHTML = state.participants.map(name =>
     `<button class="user-chip ${activeUser===name?'active':''}" onclick="selectUser('${name}')">${name}</button>`
   ).join('');
 }
-
 function selectUser(name) {
   activeUser = name;
   renderUserBar();
   switchTab('predict');
 }
 
+// ── TABS ─────────────────────────────────────────────────────
 function switchTab(tab) {
   currentTab = tab;
-  ['leaderboard','predict','admin'].forEach(t => {
-    document.getElementById('tab-'+t).style.display = t===tab?'':'none';
-  });
-  document.querySelectorAll('.nav-btn').forEach((el,i)=>{
-    el.classList.toggle('active',['leaderboard','predict','admin'][i]===tab);
-  });
+  ['leaderboard','predict','admin'].forEach(t =>
+    document.getElementById('tab-'+t).style.display = t===tab?'':'none'
+  );
+  document.querySelectorAll('.nav-btn').forEach((el,i) =>
+    el.classList.toggle('active', ['leaderboard','predict','admin'][i]===tab)
+  );
   renderTab(tab);
 }
-
 function renderTab(tab) {
-  if(tab==='leaderboard') renderLeaderboard();
-  else if(tab==='predict') renderPredict();
-  else if(tab==='admin') renderAdmin();
+  if (tab==='leaderboard') renderLeaderboard();
+  else if (tab==='predict') renderPredict();
+  else if (tab==='admin') renderAdmin();
 }
 
+// ── RENDER LEADERBOARD ───────────────────────────────────────
 function renderLeaderboard() {
   const lb = getLeaderboard();
   const medals = ['🥇','🥈','🥉'];
   const el = document.getElementById('tab-leaderboard');
-  el.innerHTML = `<div class="section-title">Таблица лидеров</div>` +
+
+  // champion result block
+  let champBlock = '';
+  if (state.champion) {
+    champBlock = `<div class="champion-card correct" style="margin-bottom:20px">
+      <div class="champion-title">🏆 Чемпион определён</div>
+      <div style="font-size:18px;font-weight:600">${FLAGS[state.champion]||''} ${state.champion}</div>
+    </div>`;
+  }
+
+  el.innerHTML = `<div class="section-title">Таблица лидеров</div>` + champBlock +
     (lb.length===0 ? `<div class="empty">Нет участников</div>` :
-      lb.map((p,i)=>`
+      lb.map((p,i) => `
         <div class="lb-row ${i===0?'first':''}">
           <div class="lb-rank">${medals[i]||i+1}</div>
-          <div class="lb-name">${p.name}</div>
+          <div class="lb-name">
+            ${p.name}
+            ${p.pick ? `<div style="font-size:11px;color:var(--muted);font-weight:400">🏆 ${p.pick}${p.champPts ? ` <span style="color:var(--purple)">+${p.champPts}</span>` : ''}</div>` : ''}
+          </div>
           <div class="lb-stats">
             <span title="Точный счёт">⚡${p.exact}</span>
             <span title="Разница">↔${p.diff}</span>
@@ -245,39 +307,78 @@ function renderLeaderboard() {
       <div class="legend-row"><span>⚡ Точный счёт</span><b>${state.scoring.exact} очка</b></div>
       <div class="legend-row"><span>↔ Разница голов</span><b>${state.scoring.diff} очка</b></div>
       <div class="legend-row"><span>✓ Верный исход</span><b>${state.scoring.outcome} очко</b></div>
+      <div class="legend-row"><span>🏆 Чемпион турнира</span><b>${state.scoring.champion} очков</b></div>
     </div>`;
 }
 
+// ── RENDER PREDICT ───────────────────────────────────────────
 function renderPredict() {
   const el = document.getElementById('tab-predict');
   if (!activeUser) {
     el.innerHTML = `<div class="empty">Выберите своё имя выше 👆</div>`;
     return;
   }
-  const preds = state.predictions[activeUser]||{};
-  const groups = [...new Set(state.matches.map(m=>m.group))].sort();
 
-  const filterHtml = `
-    <div class="group-filter">
-      <button class="filter-btn ${activeGroupFilter==='ALL'?'active':''}" onclick="setGroupFilter('ALL')">Все</button>
-      ${groups.map(g=>`<button class="filter-btn ${activeGroupFilter===g?'active':''}" onclick="setGroupFilter('${g}')">Группа ${g}</button>`).join('')}
+  const preds = state.predictions[activeUser] || {};
+  const champPick = state.championPicks[activeUser] || '';
+  const isLocked = state.locked;
+  const lockedPhase = state.lockedPhase || 'none';
+
+  // locked banner
+  const lockedBanner = isLocked ? `
+    <div class="banner banner-gold">
+      🔒 <span><b>Приём прогнозов закрыт.</b> Ожидайте открытия следующей фазы.</span>
+    </div>` : '';
+
+  // champion block
+  const champLocked = isLocked;
+  const champCorrect = state.champion && champPick === state.champion;
+  const champBlock = `
+    <div class="champion-card ${champCorrect?'correct':''}">
+      <div class="champion-title">🏆 Прогноз на чемпиона турнира (+${state.scoring.champion} очков)</div>
+      <select class="champion-select" ${champLocked?'disabled':''} onchange="saveChampionPick(this.value)">
+        <option value="">— выберите команду —</option>
+        ${ALL_TEAMS.map(t => `<option value="${t}" ${champPick===t?'selected':''}>${FLAGS[t]||''} ${t}</option>`).join('')}
+      </select>
+      ${champCorrect ? `<div style="color:var(--green);font-size:13px;margin-top:8px">✓ Угадано! +${state.scoring.champion} очков</div>` : ''}
+      ${state.champion && !champCorrect && champPick ? `<div style="color:var(--red);font-size:13px;margin-top:8px">✗ Не угадано (победитель: ${state.champion})</div>` : ''}
     </div>`;
 
-  const filtered = activeGroupFilter==='ALL' ? state.matches : state.matches.filter(m=>m.group===activeGroupFilter);
+  // phase filters — show only phases that have matches
+  const availablePhases = [...new Set(state.matches.map(m => m.group))].filter(g => PHASE_ORDER.includes(g));
+  const hasGroup = state.matches.some(m => m.group === 'group');
+  const filterBtns = [
+    `<button class="filter-btn ${activePhaseFilter==='ALL'?'active':''}" onclick="setPhaseFilter('ALL')">Все</button>`,
+    hasGroup ? `<button class="filter-btn ${activePhaseFilter==='group'?'active':''}" onclick="setPhaseFilter('group')">Группы</button>` : '',
+    ...PHASE_ORDER.filter(p => p!=='group' && availablePhases.includes(p)).map(p =>
+      `<button class="filter-btn ${activePhaseFilter===p?'active':''}" onclick="setPhaseFilter('${p}')">${PHASE_LABELS[p]}</button>`
+    )
+  ].join('');
 
-  // group by group label
+  const filtered = activePhaseFilter==='ALL' ? state.matches : state.matches.filter(m => m.group===activePhaseFilter);
+  const filledCount = Object.keys(preds).length;
+
+  // group matches by phase
   let matchesHtml = '';
-  let lastGroup = null;
+  let lastPhase = null;
   filtered.forEach(m => {
-    if (m.group !== lastGroup) {
-      matchesHtml += `<div class="group-header">Группа ${m.group}</div>`;
-      lastGroup = m.group;
+    const phase = m.group;
+    if (phase !== lastPhase) {
+      const label = phase === 'group' ? 'Групповой этап' : (PHASE_LABELS[phase] || phase);
+      matchesHtml += `<div class="phase-header">${label}</div>`;
+      lastPhase = phase;
     }
-    const pred = preds[m.id]||{h:'',a:''};
-    const pts = calcPts(pred,m);
+    const pred = preds[m.id] || { h:'', a:'' };
+    const pts = calcPts(pred, m);
+    // lock per phase
+    const phaseIdx = PHASE_ORDER.indexOf(phase);
+    const lockedPhaseIdx = PHASE_ORDER.indexOf(lockedPhase);
+    const matchLocked = isLocked && phaseIdx <= lockedPhaseIdx;
+    const isPlayoff = phase !== 'group';
     matchesHtml += `
       <div class="match-card">
         <div class="match-meta">
+          <span class="badge ${isPlayoff?'badge-playoff':'badge-group'}">${isPlayoff ? (PHASE_LABELS[phase]||phase) : ('Гр. ' + phase)}</span>
           <span class="date-str">${m.date} · ${m.time}</span>
           ${resultBadge(pts)}
         </div>
@@ -285,66 +386,61 @@ function renderPredict() {
           <div class="team">${FLAGS[m.home]||''} ${m.home}</div>
           <div class="score-inputs">
             <input class="score-inp" type="number" min="0" max="20" value="${pred.h??''}" placeholder="—"
-              onchange="savePred('${m.id}',this.value,null)">
+              ${matchLocked?'disabled':''} onchange="savePred('${m.id}',this.value,null)">
             <span class="colon">:</span>
             <input class="score-inp" type="number" min="0" max="20" value="${pred.a??''}" placeholder="—"
-              onchange="savePred('${m.id}',null,this.value)">
+              ${matchLocked?'disabled':''} onchange="savePred('${m.id}',null,this.value)">
           </div>
           <div class="team right">${m.away} ${FLAGS[m.away]||''}</div>
         </div>
-        ${m.hs!==null?`<div class="actual-res">Результат: ${m.hs} : ${m.as_}</div>`:''}
+        ${m.hs!==null ? `<div class="actual-res">Результат: ${m.hs} : ${m.as_}</div>` : ''}
+        ${isPlayoff ? `<div class="actual-res" style="color:var(--muted);font-size:11px">Пенальти не учитываются — счёт основного + доп. времени</div>` : ''}
       </div>`;
   });
 
-  const lockedBanner = isLocked ? `
-    <div style="background:var(--gold-dim);border:1px solid var(--gold);border-radius:var(--radius-lg);padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:10px;font-size:14px;color:var(--gold)">
-      🔒 <span><b>Приём прогнозов закрыт.</b> Групповой этап начался — изменения заблокированы.</span>
-    </div>` : '';
-
-  const total = Object.keys(preds).length;
   el.innerHTML = `
-    <div class="section-title">Прогнозы: ${activeUser} <span style="font-size:13px;font-weight:400;color:var(--muted)">(${total}/72)</span></div>
+    <div class="section-title">Прогнозы: ${activeUser} <span style="font-size:13px;font-weight:400;color:var(--muted)">(${filledCount} заполнено)</span></div>
     ${lockedBanner}
-    ${filterHtml}
+    ${champBlock}
+    <div class="phase-filter">${filterBtns}</div>
     ${matchesHtml}`;
-
-  // disable all inputs if locked
-  if (isLocked) {
-    el.querySelectorAll('.score-inp').forEach(inp => {
-      inp.disabled = true;
-      inp.style.opacity = '0.4';
-      inp.style.cursor = 'not-allowed';
-    });
-  }
 }
 
-function setGroupFilter(g) {
-  activeGroupFilter = g;
-  renderPredict();
-}
+function setPhaseFilter(p) { activePhaseFilter = p; renderPredict(); }
 
 async function savePred(matchId, newH, newA) {
   if (!activeUser) return;
-  if (isLocked) { flash('🔒 Приём прогнозов закрыт'); return; }
-  const preds = state.predictions[activeUser]||{};
-  const cur = preds[matchId]||{h:null,a:null};
-  const h = newH!==null?(newH===''?null:+newH):cur.h;
-  const a = newA!==null?(newA===''?null:+newA):cur.a;
-  if (!state.predictions[activeUser]) state.predictions[activeUser]={};
-  state.predictions[activeUser][matchId]={h,a};
+  if (state.locked) { flash('🔒 Приём прогнозов закрыт', 'red'); return; }
+  const preds = state.predictions[activeUser] || {};
+  const cur = preds[matchId] || { h:null, a:null };
+  const h = newH!==null ? (newH===''?null:+newH) : cur.h;
+  const a = newA!==null ? (newA===''?null:+newA) : cur.a;
+  if (!state.predictions[activeUser]) state.predictions[activeUser] = {};
+  state.predictions[activeUser][matchId] = { h, a };
   try {
-    await apiPost({action:'savePrediction',user:activeUser,matchId,h,a});
+    await apiPost({ action:'savePrediction', user:activeUser, matchId, h, a });
     flash('Сохранено ✓');
-  } catch(e) { flash('Ошибка ✗'); }
+  } catch(e) { flash('Ошибка ✗', 'red'); }
 }
 
+async function saveChampionPick(team) {
+  if (!activeUser) return;
+  if (state.locked) { flash('🔒 Приём прогнозов закрыт', 'red'); return; }
+  state.championPicks[activeUser] = team;
+  try {
+    await apiPost({ action:'saveChampionPick', user:activeUser, team });
+    flash('Прогноз на чемпиона сохранён ✓');
+  } catch(e) { flash('Ошибка ✗', 'red'); }
+}
+
+// ── RENDER ADMIN ─────────────────────────────────────────────
 function renderAdmin() {
   const el = document.getElementById('tab-admin');
   if (!adminUnlocked) {
     el.innerHTML = `
       <div class="section-title">Вход для администратора</div>
       <div class="card">
-        <p style="color:var(--muted);font-size:14px;margin-bottom:12px">Введите пароль для ввода результатов</p>
+        <p style="color:var(--muted);font-size:14px;margin-bottom:12px">Введите пароль</p>
         <div class="input-row">
           <input class="text-inp" type="password" id="admin-pw" placeholder="Пароль..." onkeydown="if(event.key==='Enter')checkAdmin()">
           <button class="btn btn-primary" onclick="checkAdmin()">Войти</button>
@@ -353,17 +449,29 @@ function renderAdmin() {
     return;
   }
 
-  const groups = [...new Set(state.matches.map(m=>m.group))].sort();
+  const isLocked = state.locked;
+  const lockedPhase = state.lockedPhase || 'none';
+
+  // phase buttons
+  const phaseButtons = PHASE_ORDER.map(p => {
+    const isCurrent = lockedPhase === p;
+    return `<button class="filter-btn ${isCurrent?'active':''}" onclick="setLockedPhase('${p}')" style="${isCurrent?'cursor:default':''}">
+      ${PHASE_LABELS[p]}
+    </button>`;
+  }).join('');
+
+  // admin match list
   let matchesHtml = '';
-  let lastGroup = null;
-  state.matches.forEach(m=>{
-    if(m.group!==lastGroup){
-      matchesHtml+=`<div style="font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:12px 0 6px;border-bottom:1px solid var(--border);margin-bottom:4px">Группа ${m.group}</div>`;
-      lastGroup=m.group;
+  let lastPhase = null;
+  state.matches.forEach(m => {
+    if (m.group !== lastPhase) {
+      const label = m.group==='group' ? 'Групповой этап' : (PHASE_LABELS[m.group]||m.group);
+      matchesHtml += `<div style="font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:12px 0 6px;border-bottom:1px solid var(--border);margin-bottom:4px">${label}</div>`;
+      lastPhase = m.group;
     }
-    matchesHtml+=`
+    matchesHtml += `
       <div class="admin-match">
-        <span style="flex:1;color:var(--text);font-size:13px">${FLAGS[m.home]||''} ${m.home} — ${m.away} ${FLAGS[m.away]||''}</span>
+        <span style="flex:1;font-size:13px">${FLAGS[m.home]||''} ${m.home} — ${m.away} ${FLAGS[m.away]||''}</span>
         <span style="font-size:11px;color:var(--muted);white-space:nowrap">${m.date} ${m.time}</span>
         <div style="display:flex;align-items:center;gap:4px">
           <input class="score-inp" style="width:38px;height:36px;font-size:15px" type="number" min="0"
@@ -375,20 +483,40 @@ function renderAdmin() {
       </div>`;
   });
 
-  const lockBtn = isLocked
-    ? `<button class="btn btn-primary" onclick="toggleLock(false)" style="background:var(--green);margin-bottom:12px;width:100%">🔓 Разблокировать приём прогнозов</button>`
-    : `<button class="btn" onclick="toggleLock(true)" style="background:var(--gold-dim);border:1px solid var(--gold);color:var(--gold);margin-bottom:12px;width:100%">🔒 Заблокировать приём прогнозов</button>`;
-
   el.innerHTML = `
     <div class="section-title">Панель администратора</div>
+
     <div class="card">
       <div class="card-title">Управление приёмом прогнозов</div>
-      ${lockBtn}
-      <p style="font-size:12px;color:var(--muted)">Статус: ${isLocked ? '<span style="color:var(--gold)">🔒 Заблокировано</span>' : '<span style="color:var(--green)">🔓 Открыто</span>'}</p>
+      ${isLocked
+        ? `<button class="btn btn-primary" onclick="toggleLock(false)" style="width:100%;margin-bottom:10px">🔓 Открыть приём прогнозов</button>`
+        : `<button class="btn btn-gold" onclick="toggleLock(true)" style="width:100%;margin-bottom:10px">🔒 Закрыть приём прогнозов</button>`
+      }
+      <div style="font-size:12px;color:var(--muted)">
+        Статус: ${isLocked ? '<span style="color:var(--gold)">🔒 Закрыто</span>' : '<span style="color:var(--green)">🔓 Открыто</span>'}
+      </div>
     </div>
+
+    <div class="card">
+      <div class="card-title">Заблокированная фаза (прогнозы на эту и предыдущие фазы недоступны)</div>
+      <div class="phase-filter" style="margin-bottom:0">${phaseButtons}</div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">🏆 Чемпион турнира</div>
+      <div class="input-row">
+        <select class="text-inp" id="champion-select">
+          <option value="">— не определён —</option>
+          ${ALL_TEAMS.map(t=>`<option value="${t}" ${state.champion===t?'selected':''}>${FLAGS[t]||''} ${t}</option>`).join('')}
+        </select>
+        <button class="btn btn-primary" onclick="saveChampion()">Сохранить</button>
+      </div>
+      ${state.champion ? `<div style="font-size:13px;color:var(--green);margin-top:8px">Текущий чемпион: ${FLAGS[state.champion]||''} ${state.champion}</div>` : ''}
+    </div>
+
     <div class="card">
       <div class="card-title">Очки за прогноз</div>
-      ${[['exact','⚡ Точный счёт'],['diff','↔ Разница голов'],['outcome','✓ Верный исход']].map(([k,label])=>`
+      ${[['exact','⚡ Точный счёт'],['diff','↔ Разница голов'],['outcome','✓ Верный исход'],['champion','🏆 Чемпион турнира']].map(([k,label])=>`
         <div class="scoring-row">
           <span>${label}</span>
           <div style="display:flex;align-items:center;gap:8px">
@@ -398,50 +526,71 @@ function renderAdmin() {
           </div>
         </div>`).join('')}
     </div>
+
     <div class="card">
-      <div class="card-title">Результаты матчей (72 игры)</div>
+      <div class="card-title">Результаты матчей</div>
       ${matchesHtml}
     </div>
-    <button class="btn btn-ghost" onclick="refreshData()" style="margin-top:8px">↻ Обновить данные</button>`;
+
+    <button class="btn btn-ghost" onclick="refreshData()" style="margin-top:8px">↻ Обновить данные</button>
+  `;
 }
 
 function checkAdmin() {
   const pw = document.getElementById('admin-pw').value;
-  if(pw===ADMIN_PW){adminUnlocked=true;renderAdmin();}
-  else flash('Неверный пароль ✗');
+  if (pw===ADMIN_PW) { adminUnlocked=true; renderAdmin(); }
+  else flash('Неверный пароль ✗', 'red');
+}
+
+async function toggleLock(lock) {
+  try {
+    await apiPost({ action:'saveLock', password:ADMIN_PW, locked:lock });
+    state.locked = lock;
+    flash(lock ? '🔒 Прогнозы закрыты' : '🔓 Прогнозы открыты');
+    renderAdmin();
+  } catch(e) { flash('Ошибка ✗', 'red'); }
+}
+
+async function setLockedPhase(phase) {
+  try {
+    await apiPost({ action:'saveLockedPhase', password:ADMIN_PW, phase });
+    state.lockedPhase = phase;
+    flash(`Фаза заблокирована: ${PHASE_LABELS[phase]}`);
+    renderAdmin();
+  } catch(e) { flash('Ошибка ✗', 'red'); }
+}
+
+async function saveChampion() {
+  const team = document.getElementById('champion-select').value;
+  try {
+    await apiPost({ action:'saveChampion', password:ADMIN_PW, team });
+    state.champion = team || null;
+    flash('Чемпион сохранён ✓');
+    renderAdmin();
+  } catch(e) { flash('Ошибка ✗', 'red'); }
 }
 
 async function changeScoring(key, delta) {
-  state.scoring[key]=Math.max(0,state.scoring[key]+delta);
-  await apiPost({action:'saveScoring',password:ADMIN_PW,scoring:state.scoring});
+  state.scoring[key] = Math.max(0, state.scoring[key]+delta);
+  await apiPost({ action:'saveScoring', password:ADMIN_PW, scoring:state.scoring });
   flash('Сохранено ✓');
   renderAdmin();
 }
 
 async function saveResult(matchId, newH, newA) {
-  const m=state.matches.find(m=>m.id===matchId);
-  if(!m) return;
-  if(newH!==null) m.hs=newH===''?null:+newH;
-  if(newA!==null) m.as_=newA===''?null:+newA;
+  const m = state.matches.find(m=>m.id===matchId);
+  if (!m) return;
+  if (newH!==null) m.hs = newH===''?null:+newH;
+  if (newA!==null) m.as_ = newA===''?null:+newA;
   try {
-    await apiPost({action:'saveResult',password:ADMIN_PW,matchId,hs:m.hs,as_:m.as_});
+    await apiPost({ action:'saveResult', password:ADMIN_PW, matchId, hs:m.hs, as_:m.as_ });
     flash('Результат сохранён ✓');
-  } catch(e){flash('Ошибка ✗');}
-}
-
-async function toggleLock(lock) {
-  try {
-    await apiPost({ action: 'saveLock', password: ADMIN_PW, locked: lock });
-    isLocked = lock;
-    flash(lock ? '🔒 Прогнозы заблокированы' : '🔓 Прогнозы разблокированы');
-    renderAdmin();
-    if (currentTab === 'predict') renderPredict();
-  } catch(e) { flash('Ошибка ✗'); }
+  } catch(e) { flash('Ошибка ✗', 'red'); }
 }
 
 async function refreshData() {
   flash('Обновляем...');
-  state=await apiGet({action:'getData'});
+  state = await apiGet({ action:'getData' });
   renderUserBar();
   renderTab(currentTab);
   flash('Готово ✓');
