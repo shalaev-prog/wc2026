@@ -134,6 +134,12 @@ const ADMIN_PW = 'admin2026';
 
 const PHASE_LABELS = { group:'Групповой этап', R32:'1/16 финала', R16:'1/8 финала', QF:'Четвертьфинал', SF:'Полуфинал', F:'Финал' };
 const PHASE_ORDER  = ['group','R32','R16','QF','SF','F'];
+const PLAYOFF_PHASES = ['R32','R16','QF','SF','F'];
+
+// A-L = групповой этап, R32/R16/QF/SF/F = плей-офф
+function getPhase(m) {
+  return PLAYOFF_PHASES.includes(m.group) ? m.group : 'group';
+}
 
 const ALL_TEAMS = [
   'Аргентина','Алжир','Австралия','Австрия','Англия','Бельгия','Босния',
@@ -345,8 +351,8 @@ function renderPredict() {
     </div>`;
 
   // phase filters — show only phases that have matches
-  const availablePhases = [...new Set(state.matches.map(m => m.group))].filter(g => PHASE_ORDER.includes(g));
-  const hasGroup = state.matches.some(m => m.group === 'group');
+  const availablePhases = [...new Set(state.matches.map(m => getPhase(m)))];
+  const hasGroup = availablePhases.includes('group');
   const filterBtns = [
     `<button class="filter-btn ${activePhaseFilter==='ALL'?'active':''}" onclick="setPhaseFilter('ALL')">Все</button>`,
     hasGroup ? `<button class="filter-btn ${activePhaseFilter==='group'?'active':''}" onclick="setPhaseFilter('group')">Группы</button>` : '',
@@ -355,30 +361,29 @@ function renderPredict() {
     )
   ].join('');
 
-  const filtered = activePhaseFilter==='ALL' ? state.matches : state.matches.filter(m => m.group===activePhaseFilter);
+  const filtered = activePhaseFilter==='ALL' ? state.matches : state.matches.filter(m => getPhase(m)===activePhaseFilter);
   const filledCount = Object.keys(preds).length;
 
   // group matches by phase
   let matchesHtml = '';
   let lastPhase = null;
   filtered.forEach(m => {
-    const phase = m.group;
+    const phase = getPhase(m);
     if (phase !== lastPhase) {
-      const label = phase === 'group' ? 'Групповой этап' : (PHASE_LABELS[phase] || phase);
+      const label = phase === 'group' ? `Групповой этап (Гр. ${m.group})` : (PHASE_LABELS[phase] || phase);
       matchesHtml += `<div class="phase-header">${label}</div>`;
       lastPhase = phase;
     }
     const pred = preds[m.id] || { h:'', a:'' };
     const pts = calcPts(pred, m);
-    // lock per phase
+    const isPlayoff = phase !== 'group';
     const phaseIdx = PHASE_ORDER.indexOf(phase);
     const lockedPhaseIdx = PHASE_ORDER.indexOf(lockedPhase);
     const matchLocked = isLocked && phaseIdx <= lockedPhaseIdx;
-    const isPlayoff = phase !== 'group';
     matchesHtml += `
       <div class="match-card">
         <div class="match-meta">
-          <span class="badge ${isPlayoff?'badge-playoff':'badge-group'}">${isPlayoff ? (PHASE_LABELS[phase]||phase) : ('Гр. ' + phase)}</span>
+          <span class="badge ${isPlayoff?'badge-playoff':'badge-group'}">${isPlayoff ? (PHASE_LABELS[phase]||phase) : ('Гр. ' + m.group)}</span>
           <span class="date-str">${m.date} · ${m.time}</span>
           ${resultBadge(pts)}
         </div>
@@ -464,10 +469,11 @@ function renderAdmin() {
   let matchesHtml = '';
   let lastPhase = null;
   state.matches.forEach(m => {
-    if (m.group !== lastPhase) {
-      const label = m.group==='group' ? 'Групповой этап' : (PHASE_LABELS[m.group]||m.group);
+    const phase = getPhase(m);
+    if (phase !== lastPhase) {
+      const label = phase==='group' ? `Групповой этап (Гр. ${m.group})` : (PHASE_LABELS[phase]||phase);
       matchesHtml += `<div style="font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:12px 0 6px;border-bottom:1px solid var(--border);margin-bottom:4px">${label}</div>`;
-      lastPhase = m.group;
+      lastPhase = phase;
     }
     matchesHtml += `
       <div class="admin-match">
